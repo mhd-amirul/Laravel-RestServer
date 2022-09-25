@@ -6,7 +6,9 @@ namespace Database\Seeders;
 
 use App\Models\keys;
 use App\Models\mahasiswa;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -67,6 +69,14 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => 1,
                 'key' => 'overcast',
+            ]
+        );
+
+        User::create(
+            [
+                'name' => 'amirul',
+                'email' => 'amirul@gmail.com',
+                'password' => '$2y$10$/cQcX081KtkEePWg62URj.4MhqpJ/U3C.wafCZUWkGVjU0U8J86fa',
             ]
         );
     }
