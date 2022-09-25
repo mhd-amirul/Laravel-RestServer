@@ -10,6 +10,20 @@ use Illuminate\Support\Facades\Validator;
 
 class authentikasiController extends Controller
 {
+    public function validationInput($data, $rules)
+    {
+        $val = Validator::make($data, $rules);
+        if ($val->fails()) {
+            return
+            [
+                'status' => false,
+                'message' => $val->errors()
+            ];
+        } else {
+            return ['status' => true];
+        }
+    }
+
     public function signup(Request $request)
     {
         $rules = [
@@ -20,15 +34,9 @@ class authentikasiController extends Controller
         ];
 
         $data = $request->all();
-        $val = Validator::make($data, $rules);
-
-        if ($val->fails()) {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => $val->errors()
-                ], 422
-            );
+        $val = $this->validationInput($data, $rules);
+        if ($val['status'] == false) {
+            return response()->json($val, 422);
         }
 
         $data['password'] = Hash::make($data['password']);
@@ -49,14 +57,9 @@ class authentikasiController extends Controller
         ];
 
         $data = $request->all();
-        $val = Validator::make($data, $rules);
-        if ($val->fails()) {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => $val->errors()
-                ], 422
-            );
+        $val = $this->validationInput($data, $rules);
+        if ($val['status'] == false) {
+            return response()->json($val, 422);
         }
 
         $user = User::where('email', $data['email'])->first();

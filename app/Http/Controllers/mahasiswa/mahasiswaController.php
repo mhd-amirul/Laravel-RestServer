@@ -12,6 +12,21 @@ use Illuminate\Support\Facades\Validator;
 
 class mahasiswaController extends Controller
 {
+
+    public function validationInput($data, $rules)
+    {
+        $val = Validator::make($data, $rules);
+        if ($val->fails()) {
+            return
+            [
+                'status' => false,
+                'message' => $val->errors()
+            ];
+        } else {
+            return ['status' => true];
+        }
+    }
+
     public function request_apiKey($key)
     {
         if (!$key || $key == null) {
@@ -159,18 +174,17 @@ class mahasiswaController extends Controller
             return response()->json($this->request_apiKey($key));
         } else {
             $data = $request->all();
-            $val = Validator::make($data ,[
+            $rules = [
                 'nrp' => 'required|min:9|max:10|unique:mahasiswas,nrp',
                 'nama' => 'required|min:3',
                 'email' => 'required|min:5|email|unique:mahasiswas,email',
                 'jurusan' => 'required',
-            ]);
+            ];
 
-            if ($val->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => $val->errors()
-                ], 400);
+            $val = $this->validationInput($data, $rules);
+
+            if ($val['status'] == false) {
+                return response()->json($val['message'], 422);
             }
 
             $data = mahasiswa::create($data);
@@ -192,8 +206,8 @@ class mahasiswaController extends Controller
         } else {
             $data = $request->all();
             $db = mahasiswa::where('id' ,$request->id)->first();
-            $rules = [];
             if ($db) {
+                $rules = [];
                 if ($request->nama) {
                     $rules['nama'] = 'min:3';
                 } else {
@@ -210,14 +224,12 @@ class mahasiswaController extends Controller
                     $data['email'] = $db->email;
                 }
                 // return response()->json($rules);
-                $val = Validator::make($data ,$rules);
-                if ($val->fails()) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => $val->errors()
-                    ], 400);
+                $val = $this->validationInput($data, $rules);
+                if ($val['status'] == false) {
+                    return response()->json($val, 422);
                 }
-                $data = $db->update($data);
+
+                $data[] = $db->update($data);
                 return response()->json(
                     [
                         'status' => true,

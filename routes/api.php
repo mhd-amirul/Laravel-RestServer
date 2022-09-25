@@ -26,7 +26,7 @@ Route::post('login', [authentikasiController::class, 'signin']);
 Route::get('mahasiswa', [mahasiswaController::class, 'index']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [authentikasiController::class, 'logout']);
-    Route::delete('mahasiswa', [mahasiswaController::class, 'destroy']);
-    Route::post('mahasiswa', [mahasiswaController::class, 'store']);
-    Route::put('mahasiswa', [mahasiswaController::class, 'update']);
 });
+Route::post('mahasiswa', [mahasiswaController::class, 'store']);
+Route::delete('mahasiswa', [mahasiswaController::class, 'destroy']);
+Route::put('mahasiswa', [mahasiswaController::class, 'update']);
