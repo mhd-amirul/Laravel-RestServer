@@ -204,26 +204,17 @@ class mahasiswaController extends Controller
         if ($this->request_apiKey($key)['status'] == false) {
             return response()->json($this->request_apiKey($key));
         } else {
-            $data = $request->all();
             $db = mahasiswa::where('id' ,$request->id)->first();
             if ($db) {
-                $rules = [];
-                if ($request->nama) {
-                    $rules['nama'] = 'min:3';
-                } else {
-                    $data['nama'] = $db->nama;
-                }
+                $data = $request->all();
+                $rules = ['nama' => 'min:3',];
                 if ($request->nrp && $request->nrp != $db->nrp) {
                     $rules['nrp'] = 'required|min:9|max:10|unique:mahasiswas,nrp';
-                } else {
-                    $data['nrp'] = $db->nrp;
                 }
                 if ($request->email && $request->email != $db->email) {
                     $rules['email'] = 'required|min:5|email|unique:mahasiswas,email';
-                } else {
-                    $data['email'] = $db->email;
                 }
-                // return response()->json($rules);
+
                 $val = $this->validationInput($data, $rules);
                 if ($val['status'] == false) {
                     return response()->json($val, 422);

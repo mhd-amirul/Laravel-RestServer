@@ -20,13 +20,20 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('register', [authentikasiController::class, 'signup']);
-Route::post('login', [authentikasiController::class, 'signin']);
+Route::controller(authentikasiController::class)->group(function () {
+    Route::post('register', 'signup');
+    Route::post('login', 'signin');
+});
 
-Route::get('mahasiswa', [mahasiswaController::class, 'index']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('logout', [authentikasiController::class, 'logout']);
-    Route::post('mahasiswa', [mahasiswaController::class, 'store']);
-    Route::delete('mahasiswa', [mahasiswaController::class, 'destroy']);
-    Route::put('mahasiswa', [mahasiswaController::class, 'update']);
+    Route::controller(authentikasiController::class)->group(function () {
+        Route::put('update', 'updateAccount');
+        Route::post('logout', 'logout');
+    });
+    Route::controller(mahasiswaController::class)->group(function () {
+        Route::get('mahasiswa','index');
+        Route::post('mahasiswa','store');
+        Route::delete('mahasiswa','destroy');
+        Route::put('mahasiswa','update');
+    });
 });
