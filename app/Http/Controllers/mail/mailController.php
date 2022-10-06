@@ -14,11 +14,11 @@ class mailController extends Controller
     {
         $data = [
             'subject' => 'Hello World',
-            'title' => 'Sample Test',
-            'body' => 'Here is a very simple card. It has responsive padding so it gets less padding on mobile to fill the screen more. Hopefully it can be useful to you. It is very simple and basic but can be used for a lot of simple emails.',
-            'nm_link' => 'Visit Website',
-            'value_link' => 'https://app.bootstrapemail.com/templates',
-            'img' => 'https://assets.bootstrapemail.com/logos/light/square.png'
+            'title' => 'Verify Your Account',
+            'body' => 'Please verify your email',
+            'sub_body' => 'Amazing deals, updates, interesting news right in your inbox',
+            'nm_link' => 'Click Here!',
+            'value_link' => '#',
         ];
 
         try {
