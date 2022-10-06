@@ -102,9 +102,6 @@
         }
 
     </style>
-<!-- CSS Reset : END -->
-
-<!-- Progressive Enhancements : BEGIN -->
     <style>
         .bg_white{
             background: #ffffff;
@@ -204,9 +201,9 @@
                     <tr>
                         <td>
                             <div class="text" style="padding: 0 2.5em; text-align: center;">
-                                <h2>Please verify your email</h2>
-                                <h3>Amazing deals, updates, interesting news right in your inbox</h3>
-                                <p><a href="#" class="btn btn-primary">Click Here!</a></p>
+                                <h2>{{ $data['body'] }}</h2>
+                                <h3>{{ $data['sub_body'] }}</h3>
+                                <p><a href="#" class="btn btn-primary">{{ $data['nm_link'] }}</a></p>
                             </div>
                         </td>
                     </tr>
