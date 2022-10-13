@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\auth;
 
+use App\Events\sendMailEvent;
 use App\Http\Controllers\Controller;
+use App\Models\otpCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -33,17 +35,20 @@ class authentikasiController extends Controller
             'confirmPass' => 'required|same:password'
         ];
 
-        $data = $request->all();
-        $val = $this->validationInput($data, $rules);
+        $user = $request->all();
+        $val = $this->validationInput($user, $rules);
         if ($val['status'] == false) {
             return response()->json($val, 422);
         }
 
-        $data['password'] = Hash::make($data['password']);
-        $data = User::create($data);
+        $user['password'] = Hash::make($user['password']);
+        $user['otp'] = rand(0001, 9999);
+        $data = User::create($user);
+        otpCode::create($user);
+        sendMailEvent::dispatch($user);
         return response()->json(
             [
-                'status' => true,
+                'status' => "OK",
                 'data' => $data
             ], 200
         );

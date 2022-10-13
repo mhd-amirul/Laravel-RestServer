@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Route::post('register', [authentikasiController::class, 'signup']);
 Route::controller(authentikasiController::class)->group(function () {
-    Route::post('register', 'signup');
     Route::post('login', 'signin');
 });
 

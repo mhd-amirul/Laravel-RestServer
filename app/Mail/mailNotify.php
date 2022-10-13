@@ -11,15 +11,15 @@ class mailNotify extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $data = [];
+    public $otp;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($otp)
     {
-        $this->data = $data;
+        return $this->otp = $otp;
     }
 
     /**
@@ -29,9 +29,9 @@ class mailNotify extends Mailable
      */
     public function build()
     {
-        return $this->from('amirul@pnl.ac.id')
-                    ->subject($this->data['subject'])
+        return $this->from('amirul@gmail.com','RestServer')
+                    ->subject("Verification Code")
                     ->view('emails.index')
-                    ->with('data', $this->data);
+                    ->with('data', $this->otp);
     }
 }

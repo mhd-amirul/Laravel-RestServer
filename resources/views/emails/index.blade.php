@@ -188,7 +188,7 @@
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td class="logo" style="text-align: center;">
-                            <h1><a href="#">{{ $data['title'] }}</a></h1>
+                            <h1>Verification Code</h1>
                         </td>
                     </tr>
                 </table>
@@ -201,9 +201,9 @@
                     <tr>
                         <td>
                             <div class="text" style="padding: 0 2.5em; text-align: center;">
-                                <h2>{{ $data['body'] }}</h2>
-                                <h3>{{ $data['sub_body'] }}</h3>
-                                <p><a href="#" class="btn btn-primary">{{ $data['nm_link'] }}</a></p>
+                                <h2>To complete your RentCar verification, please use the following code :</h2>
+                                <h3>{{ $data['otp'] }}</h3>
+                                {{-- <p><a href="#" class="btn btn-primary">{{ $otp['nm_link'] }}</a></p> --}}
                             </div>
                         </td>
                     </tr>
