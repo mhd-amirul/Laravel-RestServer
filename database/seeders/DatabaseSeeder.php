@@ -65,18 +65,18 @@ class DatabaseSeeder extends Seeder
                 'jurusan' => 'Manajemen'
             ]
         );
-        keys::create(
-            [
-                'user_id' => 1,
-                'key' => 'overcast',
-            ]
-        );
+        // keys::create(
+        //     [
+        //         'user_id' => 1,
+        //         'key' => 'overcast',
+        //     ]
+        // );
 
         User::create(
             [
                 'name' => 'amirul',
                 'email' => 'amirul@gmail.com',
-                'password' => '$2y$10$/cQcX081KtkEePWg62URj.4MhqpJ/U3C.wafCZUWkGVjU0U8J86fa',
+                'password' => '$2y$10$VVV8dnw.ikykhh.mdEqROOwbJQlfGdXhWMlbOBeAlaX3OYcyQzaju',
             ]
         );
     }

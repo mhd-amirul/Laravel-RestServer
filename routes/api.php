@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\auth\authentikasiController;
 use App\Http\Controllers\mahasiswa\mahasiswaController;
+use App\Http\Controllers\profile\profileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,20 +21,24 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('register', [authentikasiController::class, 'signup']);
 Route::controller(authentikasiController::class)->group(function () {
+    Route::post('register', 'signup');
     Route::post('login', 'signin');
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::controller(authentikasiController::class)->group(function () {
-        Route::put('update', 'updateAccount');
         Route::post('logout', 'logout');
+    });
+    Route::controller(profileController::class)->group(function () {
+        Route::put('update', 'updateAccount');
+        Route::put('resetPass', 'resetPass');
     });
     Route::controller(mahasiswaController::class)->group(function () {
         Route::get('mahasiswa','index');
         Route::post('mahasiswa','store');
         Route::delete('mahasiswa','destroy');
         Route::put('mahasiswa','update');
+        Route::post('generateKey','generateKey');
     });
 });

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\profile;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\resetPasswordRequest;
+use App\Http\Requests\updateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,95 +12,37 @@ use Illuminate\Support\Facades\Validator;
 
 class profileController extends Controller
 {
-    public function validationInput($data, $rules)
+    public function updateAccount(updateUserRequest $request)
     {
-        $val = Validator::make($data, $rules);
-        if ($val->fails()) {
-            return
-            [
-                'status' => false,
-                'message' => $val->errors()
-            ];
+        $db = User::where("email", auth()->user()->email)->first();
+        if ($db) {
+            $data = $request->all();
+            $db->update($data);
+            return response()->json([
+                "message" => "User information have been update",
+                "data" => $db
+            ], 200 );
         } else {
-            return ['status' => true];
+            return response()->json([ "message" => "User not Found" ], 404 );
         }
     }
 
-    public function updateAccount(Request $request)
+    public function resetPass(resetPasswordRequest $request)
     {
-        $db = User::where('id', $request->id)->first();
+        $db = User::where("email", auth()->user()->email)->first();
         if ($db) {
             $data = $request->all();
-            $rules = [];
-            if ($data['name'] || $data['name'] != $db['name']) {
-                $rules['name'] = 'required|min:6';
+            if (Hash::check($data["oldPass"], $db["password"])) {
+                $data["password"] = Hash::make($data["password"]);
+                $db->update($data);
+                return response()->json([
+                    "message" => "Password have been updated",
+                ], 200 );
+            } else {
+                return response()->json([ "message" => "Invalid Password" ], 400 );
             }
-            if ($data['email'] || $data['email'] != $db['email']) {
-                $rules['email'] = 'required|email|unique:users,email';
-            }
-
-            $val = $this->validationInput($data, $rules);
-            if ($val['status'] == false) {
-                return response()->json($val['message'], 422);
-            }
-
-            $db->update($data);
-            return response()->json(
-                [
-                    'status' => true,
-                    'message' => 'Update have been Successfully',
-                    'item' => $db
-                ]
-            );
         } else {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => 'User not Found'
-                ], 404
-            );
-        }
-    }
-
-    public function resetPass(Request $request)
-    {
-        $db = User::where('id', $request->id)->first();
-        if ($db) {
-            $data = $request->all();
-            $rules = [
-                'password' => 'required|min:5',
-                'newPass' => 'required|min:5',
-                'confirmPass' => 'required|same:newPass'
-            ];
-            $val = $this->validationInput($data, $rules);
-            if ($val['status'] == false) {
-                return response()->json($val['message'], 422);
-            }
-
-            if (!Hash::check($data['password'], $db['password'])) {
-                return response()->json(
-                    [
-                        'status' => false,
-                        'message' => 'Invalid Password'
-                    ], 400
-                );
-            }
-
-            $data['password'] = Hash::make($data['newPass']);
-            $db->update($data);
-            return response()->json(
-                [
-                    'status' => true,
-                    'message' => 'Password have been reset',
-                ]
-            );
-        } else {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => 'User not Found'
-                ], 404
-            );
+            return response()->json([ "message" => "User not Found" ], 404 );
         }
     }
 }
